@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kwestionariusz</title>
+    <script>
+        let responses = { pytanie1: { A: 0, B: 0, C: 0 }, pytanie2: { Tak: 0, Nie: 0 } };
+        
+        function submitForm() {
+            let q1 = document.querySelector('input[name="pytanie1"]:checked');
+            let q2 = document.querySelector('input[name="pytanie2"]:checked');
+            
+            if (q1 && q2) {
+                responses.pytanie1[q1.value]++;
+                responses.pytanie2[q2.value]++;
+                showResults();
+            } else {
+                alert("Proszę odpowiedzieć na wszystkie pytania.");
+            }
+        }
+        
+        function showResults() {
+            let total1 = Object.values(responses.pytanie1).reduce((a, b) => a + b, 0);
+            let total2 = Object.values(responses.pytanie2).reduce((a, b) => a + b, 0);
+            
+            document.getElementById("results").innerHTML = `
+                <h3>Wyniki:</h3>
+                <p>Pytanie 1:</p>
+                ${Object.entries(responses.pytanie1).map(([key, val]) => `${key}: ${((val / total1) * 100).toFixed(1)}%`).join('<br>')}
+                <p>Pytanie 2:</p>
+                ${Object.entries(responses.pytanie2).map(([key, val]) => `${key}: ${((val / total2) * 100).toFixed(1)}%`).join('<br>')}
+            `;
+        }
+    </script>
+</head>
+<body>
+    <h2>Kwestionariusz</h2>
+    <form onsubmit="event.preventDefault(); submitForm();">
+        <p>1. Jaki jest Twój ulubiony kolor?</p>
+        <label><input type="radio" name="pytanie1" value="A"> Czerwony</label><br>
+        <label><input type="radio" name="pytanie1" value="B"> Niebieski</label><br>
+        <label><input type="radio" name="pytanie1" value="C"> Zielony</label><br>
+        
+        <p>2. Czy lubisz programowanie?</p>
+        <label><input type="radio" name="pytanie2" value="Tak"> Tak</label><br>
+        <label><input type="radio" name="pytanie2" value="Nie"> Nie</label><br>
+        
+        <button type="submit">Wyślij</button>
+    </form>
+    
+    <div id="results"></div>
+</body>
+</html>
