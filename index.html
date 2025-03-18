@@ -1,6 +1,36 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
+    <script>
+function sendData() {
+    let q1 = document.querySelector('input[name="pytanie1"]:checked');
+    let q2 = document.querySelector('input[name="pytanie2"]:checked');
+
+    if (!q1 || !q2) {
+        alert("Proszę odpowiedzieć na wszystkie pytania.");
+        return;
+    }
+
+    let data = {
+        pytanie1: q1.value,
+        pytanie2: q2.value
+    };
+
+    fetch("https://script.google.com/macros/s/AKfycbwfJ0KS7Xwk9B3wmGP8lywKaSGOv3jYtX8yEZMxvzlYPoEOyUROjwy8UL3hM71lY79j/exec", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" }
+    })
+    .then(response => response.text())
+    .then(result => {
+        alert("Odpowiedź zapisana!");
+        q1.checked = false;
+        q2.checked = false;
+    })
+    .catch(error => console.error("Błąd:", error));
+}
+</script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kwestionariusz</title>
@@ -46,7 +76,8 @@
         <label><input type="radio" name="pytanie2" value="Tak"> Tak</label><br>
         <label><input type="radio" name="pytanie2" value="Nie"> Nie</label><br>
         
-        <button type="submit">Wyślij</button>
+        <button type="button" onclick="sendData()">Wyślij</button>
+
     </form>
     
     <div id="results"></div>
